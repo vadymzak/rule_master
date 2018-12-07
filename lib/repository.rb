@@ -33,5 +33,4 @@ class Repository
     end
   end
 end
-
 Repository.new.request_validator
