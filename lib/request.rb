@@ -1,26 +1,27 @@
 class Request
   attr_accessor :name, :body
 
-  def initialize(name, body)
-    @name = name
-    @body = body
-  end
-
-  def self.open
+  def open
     code = {
       request: {
         report_in_company_bp: {
-        id: 1,
+        id: 123,
         bp_id: "abc123",
         report_id: 128
         }
       }
     }
   end
-end
 
-# report_in_company_bp: {
-#   id: 1,
-#   bp_id: abc123,
-#   report_id: 128
-# }
+  def name
+    incoming_request = open
+    @request_code = incoming_request.dig(:request)
+    @request_name = @request_code.keys[0].to_s
+  end
+
+  def body
+    @incoming_request = open
+    @request_code = @incoming_request.dig(:request)
+    @request_body = @request_code.values[0]
+  end
+end

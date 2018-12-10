@@ -5,32 +5,42 @@ require_relative 'rule'
 
 class Repository
 
-  def storage
-    access_rule = Storage.open
-    @access_rule_code = access_rule.dig(:rule)
-    p @access_rule_name = @access_rule_code[:resource]
-    p @access_rule_params = @access_rule_code[:params]
+  def initialize
+    @storage = Storage.new
+    @storage_codes = @storage.open
+    @request = Request.new
   end
 
-  def rule_creator
-    Rule.new(name = @access_rule_name, body = @access_rule_params)
-    #  тут могли б створюватись нові правила, які потім би записувались у Storage
+  def storage_sample(rule)
+    @access_rule_code = @storage_codes.dig(rule)
   end
 
-  def request
-    # це розпарсені дані з першого завдання
-    incoming_request = Request.open
-    @request_code = incoming_request.dig(:request)
-    p @request_name = @request_code.keys[0].to_s
-    p @request_body = @request_code.values[0]
+  def storage_rule_name
+    @access_rule_name = @access_rule_code[:resource] unless @access_rule_code.nil?
   end
 
-  def request_validator
-    if @access_rule_name == @request_name && @access_rule_params == @request_body
-      puts "Request valid. Access confirmed!"
+  def storage_rule_body
+    @access_rule_body = @access_rule_code[:params] unless @access_rule_code.nil?
+  end
+
+  def request_name_validator
+    if @storage.array_of_rules.include?(@request.name)
+      puts "Request name valid!"
+      storage_sample(@request.name.to_sym)
     else
-      puts "Request invalid. Access denied!"
+      puts "Request name invalid. Access denied!"
+    end
+  end
+
+  def request_body_validator
+    if storage_rule_name == @request.name && storage_rule_body == @request.body
+      puts "Request body valid. Access confirmed!"
+    else
+      puts "Request body invalid. Access denied!"
     end
   end
 end
-Repository.new.request_validator
+
+rep = Repository.new
+rep.request_name_validator
+rep.request_body_validator
