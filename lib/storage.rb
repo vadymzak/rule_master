@@ -1,7 +1,7 @@
 class Storage
 
-  def open
-    @code = {
+  def storaged_rules
+    @rules = {
       report_in_company_bp: {
         resource: 'report_in_company_bp',
         description: 'allow access to bp report',
@@ -33,12 +33,16 @@ class Storage
     }
   end
 
-  def array_of_rules
+  def array_of_rules_resources
     @array = []
-    @code.each do |key, value|
+    @rules.each do |key, value|
       @array.push(value[:resource])
     end
     @array
+  end
+
+  def request_name_valid?(request_name)
+    array_of_rules_resources.include?(request_name)
   end
 
 end

@@ -1,9 +1,8 @@
 class Rule
-  attr_accessor :name, :body
 
-  def initialize(name, body)
+  def initialize(name, params)
     @name = name
-    @body = body
+    @params = params
   end
 
 end
