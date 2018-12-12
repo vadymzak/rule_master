@@ -1,13 +1,18 @@
+require_relative 'parsed_request'
+require_relative 'validator'
+
 class Storage
 
-  def storaged_rules
-    @rules = {
+  attr_reader :access_rules
+
+  def initialize
+    @access_rules = {
       report_in_company_bp: {
         resource: 'report_in_company_bp',
         description: 'allow access to bp report',
         params: {
           id: 123,
-          bp_id: "abc123",
+          bp_id: 'abc123',
           report_id: 128
         },
         participant: {
@@ -21,7 +26,7 @@ class Storage
         description: 'allow access to bp report',
         params: {
           id: 123,
-          bp_id: "abc123",
+          bp_id: 'abc123',
           report_id: 128
         },
         participant: {
@@ -33,16 +38,7 @@ class Storage
     }
   end
 
-  def array_of_rules_resources
-    @array = []
-    @rules.each do |key, value|
-      @array.push(value[:resource])
-    end
-    @array
+  def find_rule(rule_name)
+    @access_rules[rule_name.to_sym]
   end
-
-  def request_name_valid?(request_name)
-    array_of_rules_resources.include?(request_name)
-  end
-
 end
